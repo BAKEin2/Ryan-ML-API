@@ -1,29 +1,44 @@
 from flask import Flask, app
 from flask import jsonify
 from flask import request
+from joblib import load
+from get_tweets import get_related_tweets
 
 import tensorflow as tf
 import cv2
 import numpy as np
 
+
+pipeline = load("text_classification.joblib")
+
+# function to get results for a particular text query
+def requestResults(name):
+    # get the tweets text
+    tweets = get_related_tweets(name)
+    # get the prediction
+    tweets['prediction'] = pipeline.predict(tweets['tweet_text'])
+    # get the value counts of different labels predicted
+    data = str(tweets.prediction.value_counts()) + '\n\n'
+    return data + str(tweets)
+
 app = Flask(__name__)
 
-model = tf.keras.models.load_model("irisclassifier.h5")
+# render default webpage
+@app.route('/')
+def home():
+    return render_template('home.html')
 
-@app.route("/classifyIris",methods=["POST"])
-def classifyIris():
-    input=request.get_json()
+# when the post method detect, then redirect to success function
+@app.route('/', methods=['POST', 'GET'])
+def get_data():
+    if request.method == 'POST':
+        user = request.form['search']
+        return redirect(url_for('success', name=user))
 
-    target=["iris_setosa","Iris-versicolor","Iris-virginica"]
-
-    sepalLength= input["sepalLength"]
-    sepalWidth= input["sepalWidth"]
-    petalLength= input["petalLength"]
-    petalWidth= input["petalWidth"]
-
-    result = model.predict([[sepalLength,sepalWidth,petalLength,petalWidth]])
-
-    return jsonify({ "result" : target[np.argmax(result[0])] })
+# get the data for the requested query
+@app.route('/success/<name>')
+def success(name):
+    return "<xmp>" + str(requestResults(name)) + " </xmp> "
 
 if __name__=="__main__":
     app.run(debug=False)

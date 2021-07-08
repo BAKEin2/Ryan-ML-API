@@ -1,29 +1,34 @@
-from flask import Flask, app
-from flask import jsonify
-from flask import request
-
-import tensorflow as tf
-import cv2
+import os
 import numpy as np
+import flask
+import pickle
+from flask import Flask, app , redirect, url_for, request, render_template
 
 app = Flask(__name__)
 
-model = tf.keras.models.load_model("irisclassifier.h5")
+@app.route('/')
+@app.route('/index')
+def index():
+    return flask.render_template('index.html')
 
-@app.route("/classifyIris",methods=["POST"])
-def classifyIris():
-    input=request.get_json()
+def ClusterNumberPredictor(to_predict_list):
+    to_predict= np.array(to_predict_list).reshape(1,2)
+    loaded_model = pickle.load(open("model.pkl","rb"))
+    result = loaded_model.predict(to_predict)
+    return result[0]
 
-    target=["iris_setosa","Iris-versicolor","Iris-virginica"]
+@app.route('/result',methods = ['POST'])
+def result():
+    if request.method =='POST':
+        to_predict_list = request.form.values()
+        to_predict_list = list(map(float, to_predict_list))
+        result = ClusterNumberPredictor(to_predict_list)
+        cluster_number = int(result)
+        prediction = "You are in cluster number ${}".format(cluster_number)
 
-    sepalLength= input["sepalLength"]
-    sepalWidth= input["sepalWidth"]
-    petalLength= input["petalLength"]
-    petalWidth= input["petalWidth"]
+        return render_template("result.html", prediction = prediction)
+        
 
-    result = model.predict([[sepalLength,sepalWidth,petalLength,petalWidth]])
-
-    return jsonify({ "result" : target[np.argmax(result[0])] })
 
 if __name__=="__main__":
     app.run(debug=False)
