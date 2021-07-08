@@ -3,11 +3,15 @@ import numpy as np
 import flask
 import pickle
 from flask import Flask, app , redirect, url_for, request, render_template
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
+@cross_origin()
 @app.route('/index')
+@cross_origin()
 def index():
     return flask.render_template('index.html')
 

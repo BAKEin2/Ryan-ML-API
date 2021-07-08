@@ -3,6 +3,7 @@ from flask import jsonify
 from flask import request
 from joblib import load
 from get_tweets import get_related_tweets
+from flask_cors import CORS
 
 import tensorflow as tf
 import cv2
@@ -22,14 +23,16 @@ def requestResults(name):
     return data + str(tweets)
 
 app = Flask(__name__)
-
+CORS(app)
 # render default webpage
 @app.route('/')
+@cross_origin()
 def home():
     return render_template('home.html')
 
 # when the post method detect, then redirect to success function
 @app.route('/', methods=['POST', 'GET'])
+@cross_origin()
 def get_data():
     if request.method == 'POST':
         user = request.form['search']
@@ -37,6 +40,7 @@ def get_data():
 
 # get the data for the requested query
 @app.route('/success/<name>')
+@cross_origin()
 def success(name):
     return "<xmp>" + str(requestResults(name)) + " </xmp> "
 
