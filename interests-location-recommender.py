@@ -1,38 +1,30 @@
-import os
-import numpy as np
-import flask
-import pickle
-from flask import Flask, app , redirect, url_for, request, render_template
-from flask_cors import CORS
+from flask import Flask, json
+from flask import jsonify
+from flask import request
+
+from joblib import dump,load
+#from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 
-@app.route('/')
-@cross_origin()
-@app.route('/index')
-@cross_origin()
-def index():
-    return flask.render_template('index.html')
+classifer=load("interest_location_based_2.joblib")
 
-def ClusterNumberPredictor(to_predict_list):
-    to_predict= np.array(to_predict_list).reshape(1,2)
-    loaded_model = pickle.load(open("model.pkl","rb"))
-    result = loaded_model.predict(to_predict)
-    return result[0]
+@app.route("/classifyBakeries",methods=["POST"])
+#@cross_origin()
+def classifyBakeries():
+    input=request.get_json()
 
-@app.route('/result',methods = ['POST'])
-def result():
-    if request.method =='POST':
-        to_predict_list = request.form.values()
-        to_predict_list = list(map(float, to_predict_list))
-        result = ClusterNumberPredictor(to_predict_list)
-        cluster_number = int(result)
-        prediction = "You are in cluster number ${}".format(cluster_number)
+    target=["12", "14" , "24" , "35" , "57"]
 
-        return render_template("result.html", prediction = prediction)
-        
+    userid_input= input["userID"]
+    interests_input = input["bread_interests"]
+    longitude_input = input["longitude"]
+    latitude_input = input["latitude"]
 
+    result=classifer.predict([[userid_input,interests_input,longitude_input,latitude_input]])
+
+    return jsonify({ "result" : target[result[0]] })
 
 if __name__=="__main__":
     app.run(debug=False)

@@ -1,32 +1,29 @@
-from flask import Flask, app
+from flask import Flask, json
 from flask import jsonify
 from flask import request
-from flask_cors import CORS
 
-import tensorflow as tf
-import cv2
-import numpy as np
+from joblib import dump,load
+#from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 
-model = tf.keras.models.load_model("irisclassifier.h5")
+classifer=load("rating_based_2.joblib")
 
-@app.route("/classifyIris",methods=["POST"])
-@cross_origin()
-def classifyIris():
+@app.route("/classifyBakeries",methods=["POST"])
+#@cross_origin()
+def classifyBakeries():
     input=request.get_json()
 
-    target=["iris_setosa","Iris-versicolor","Iris-virginica"]
+    target=["12", "14" , "24" , "35" , "57"]
 
-    sepalLength= input["sepalLength"]
-    sepalWidth= input["sepalWidth"]
-    petalLength= input["petalLength"]
-    petalWidth= input["petalWidth"]
+    userid_input= input["userID"]
+    rating_input = input["rating"]
+    placeid_input = input["placeID"]
 
-    result = model.predict([[sepalLength,sepalWidth,petalLength,petalWidth]])
+    result=classifer.predict([[userid_input,rating_input,placeid_input]])
 
-    return jsonify({ "result" : target[np.argmax(result[0])] })
+    return jsonify({ "result" : target[result[0]] })
 
 if __name__=="__main__":
     app.run(debug=False)

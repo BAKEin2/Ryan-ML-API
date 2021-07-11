@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 
 
-pipeline = load("text_classification.joblib")
+pipeline = load("user_visited_based_2.joblib")
 
 # function to get results for a particular text query
 def requestResults(name):
