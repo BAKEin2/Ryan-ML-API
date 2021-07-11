@@ -11,9 +11,43 @@
         <div id="demo1app" style="padding:40px">
             <div class= "card-panel">
                 <div class="row">
-                    
+                    <div class="input-field col s6">
+                        <input placeholder="Enter Bakery Name" id="inputBakeryName" type="text" class="validate" v-model="inputBakeryName">
+                        <label for="inputBakeryName">Bakery Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="Enter Type of Bakery" id="inputBakeryType" type="text" class="validate" v-model="inputBakeryType">
+                        <label for="inputBakeryType">Type</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="Enter Items of Bakery" id="inputBakeryObject" type="text" class="validate" v-model="inputBakeryObject">
+                        <label for="inputBakeryObject">Items bought</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="Enter price" id="inputBakeryPrice" type="text" class="validate" v-model="inputBakeryPrice">
+                        <label for="inputBakeryPrice">Price</label>
+                    </div>
                 </div>
-            </div>        
+                <div class="row">
+                    <a class="waves-effect waves-light btn" v-on:click="addNewItem">Add to Cart</a>
+                </div>
+            </div> 
+            <table>
+                <tr>
+                    <th>Bakery Name</th>
+                    <th>Type</th>
+                    <th>Items bought</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+                <tr v-for="item in cartList">
+                    <td>{{item.name}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.object}}</td>
+                    <td>${{item.price}}</td>
+                    <td><a class="waves-effect waves-light btn" v-on:click="deleteItem">Remove from Cart</a></td>
+                </tr>
+            </table>       
         </div>
 
         <script type="text/JavaScript" src="demo1app.js">

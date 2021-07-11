@@ -2,31 +2,41 @@ const demo1App = {
     
     data() {
         return {
-            inputTaskDesc: "",
-            inputTaskTitle: "",
-            toDoList: [
+            inputBakeryName: "",
+            inputBakeryType: "",
+            inputBakeryObject:"",
+            inputBakeryPrice:"",
+            cartList: [
                 {
-                    title: "Task #1",
-                    desc: "Go and buy stuff"
+                    name: "BreadTalk",
+                    type: "Muffins",
+                    object: "Chocolate Muffin",
+                    price: "10.00"
                 },
                 {
-                    title: "Task #2",
-                    desc: "Walk the dog"
+                    name: "Swee Heng",
+                    type: "Cupcakes",
+                    object: "Strawberry Cupcake",
+                    price: "8.00"
                 }
             ]
         }
     }, 
     methods: {
         addNewItem: function() {
-            this.toDoList.push({
-                title: this.inputTaskTitle,
-                desc: this.inputTaskDesc
+            this.cartList.push({
+                name: this.inputBakeryName,
+                type: this.inputBakeryType,
+                object : this.inputBakeryObject,
+                price : this.inputBakeryPrice
             })
-            this.inputTaskDesc = ""
-            this.inputTaskTitle = ""
+            this.inputBakeryName = ""
+            this.inputBakeryType = ""
+            this.inputBakeryObject = ""
+            this.inputBakeryPrice = ""
         },
         deleteItem: function(index) {
-            this.toDoList.splice(index, 1)
+            this.cartList.splice(index, 1)
         }
     }
 }
