@@ -9,8 +9,7 @@ from joblib import dump,load
 app = Flask(__name__)
 #CORS(app)
 
-classifer=load("interests_location_based_2.joblib")
-bakery_df = pd.read_csv('bakeries_location.csv')  
+classifer=load("popularity_location_based.joblib")
 
 @app.route("/recommendPopularBakeries",methods=["POST"])
 #@cross_origin()
@@ -18,8 +17,7 @@ def recommendInterestBakeries():
     input=request.get_json()
 
     target=["name","placeID","types_of_bread"]
-
-    userID= input["userID"]
+    
     longitude = input["longitude"]
     latitude = input["latitude"]
 
@@ -30,13 +28,13 @@ def recommendInterestBakeries():
     bakery_latitude = input["latitude"]
     '''
 
-    interests = [[userID,longitude,latitude]]
-    interests_df = pd.DataFrame(interests,columns=['userID','longitude','latitude'])
+    popularity = [[longitude,latitude]]
+    popularity_df = pd.DataFrame(popularity,columns=['longitude','latitude'])
     '''    
     bakeries = [[placeID,name,bakery_longitude,bakery_latitude]]
     bakeries_extracted = pd.DataFrame(bakeries,columns=['placeID','name','bakery_longitude','bakery_latitude'])
     '''
-    result=classifer.predict(interests_df)    
+    result=classifer.predict(popularity_df)    
 
     return jsonify({ "result:" : target[result[0]] })
         
