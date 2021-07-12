@@ -1,6 +1,7 @@
 from flask import Flask, json
 from flask import jsonify
 from flask import request
+import pandas as pd
 
 from joblib import dump,load
 #from flask_cors import CORS
@@ -8,23 +9,36 @@ from joblib import dump,load
 app = Flask(__name__)
 #CORS(app)
 
-classifer=load("interest_location_based_2.joblib")
+classifer=load("interests_location_based_2.joblib")
+bakery_df = pd.read_csv('bakeries_location.csv')  
 
-@app.route("/classifyBakeries",methods=["POST"])
+@app.route("/recommendInterestBakeries",methods=["POST"])
 #@cross_origin()
-def classifyBakeries():
+def recommendInterestBakeries():
     input=request.get_json()
 
-    target=["12", "14" , "24" , "35" , "57"]
+    target=["name","placeID","types_of_bread"]
 
-    userid_input= input["userID"]
-    interests_input = input["bread_interests"]
-    longitude_input = input["longitude"]
-    latitude_input = input["latitude"]
+    userID= input["userID"]
+    longitude = input["longitude"]
+    latitude = input["latitude"]
 
-    result=classifer.predict([[userid_input,interests_input,longitude_input,latitude_input]])
+    '''
+    placeID = input["placeID"]
+    name = input["name"]
+    bakery_longitude = input["longitude"]
+    bakery_latitude = input["latitude"]
+    '''
 
-    return jsonify({ "result" : target[result[0]] })
+    interests = [[userID,longitude,latitude]]
+    interests_df = pd.DataFrame(interests,columns=['userID','longitude','latitude'])
+    '''    
+    bakeries = [[placeID,name,bakery_longitude,bakery_latitude]]
+    bakeries_extracted = pd.DataFrame(bakeries,columns=['placeID','name','bakery_longitude','bakery_latitude'])
+    '''
+    result=classifer.predict(interests_df)    
+
+    return jsonify({ "result:" : target[result[0]] })
 
 if __name__=="__main__":
-    app.run(debug=False)
+    app.run(debug=True)
