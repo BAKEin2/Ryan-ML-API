@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <a class="waves-effect waves-light btn" v-on:click="addNewItem">Add to Cart</a>
+                    <a class="waves-effect waves-light btn" v-on:click="addNewItem">Add to Shop</a>
                 </div>
             </div> 
             <table>
@@ -40,12 +40,12 @@
                     <th>Price</th>
                     <th></th>
                 </tr>
-                <tr v-for="item in cartList">
+                <tr v-for="item in productList">
                     <td>{{item.name}}</td>
                     <td>{{item.type}}</td>
                     <td>{{item.object}}</td>
                     <td>${{item.price}}</td>
-                    <td><a class="waves-effect waves-light btn" v-on:click="deleteItem">Remove from Cart</a></td>
+                    <td><a class="waves-effect waves-light btn" v-on:click="deleteItem">Remove from Shop</a></td>
                 </tr>
             </table>       
         </div>

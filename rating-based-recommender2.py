@@ -9,7 +9,7 @@ from joblib import dump,load
 app = Flask(__name__)
 #CORS(app)
 
-model=load("rating_based_2.joblib")
+model=load("LoadedModels/rating_based_2.joblib")
 
 @app.route("/recommendBakeries",methods=["POST"])
 #@cross_origin()
@@ -24,7 +24,13 @@ def recommendBakeries():
 
     result=model.predict([[userid_input,rating_input,placeID_input]])
 
-    return jsonify({ "result:" : result})
+    return jsonify({
+        "result":[
+            {"name" : result[0][0][1], "score" : float(result[0][0][2])},
+            {"name" : result[0][1][1], "score" : float(result[0][1][2])},
+            {"name" : result[0][2][1], "score" : float(result[0][2][2])},
+        ]
+    })
 
 if __name__=="__main__":
     app.run(debug=True)

@@ -9,7 +9,7 @@ from joblib import dump,load
 app = Flask(__name__)
 #CORS(app)
 
-model=load("user_visited_based_2.joblib")
+model=load("LoadedModels/user_visited_based_2.joblib")
 
 @app.route("/recommendVisitedBakeries",methods=["POST"])
 #cross_origin()

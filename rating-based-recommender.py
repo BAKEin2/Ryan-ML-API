@@ -10,15 +10,16 @@ from joblib import dump,load
 app = Flask(__name__)
 #CORS(app)
 
-model = load("rating_based_2.joblib")
-pred_data = pickle.load(open("pred_data.dat", "rb"))
-pivot_data = pickle.load(open("pivot_data.dat", "rb"))
+
+model = load("LoadedModels/rating_based_2.joblib")
+predicted_ratings_svd = pickle.load(open("LoadedModels/predicted_ratings_svd.dat", "rb"))
+#pivot_data = pickle.load(open("pivot_data.dat", "rb"))
+
 @app.route("/recommendBakeries",methods=["POST"])
 #@cross_origin()
 def recommend_places():
     input=request.get_json()
-    pred_data = pickle.load(open("pred_data.dat", "rb"))
-    pivot_data = pickle.load(open("pivot_data.dat", "rb"))
+    bakery_df = pd.read_csv('dataset/bakeries_location.csv').to_json()
     #target=["name","placeID","types_of_bread",'user_ratings']
     '''
     userid_input= input["userID"]
@@ -26,12 +27,10 @@ def recommend_places():
     placeID_input = input["placeID"]
     '''
     userid_input= input["userID"]
-    pred_data = pred_data
-    pivot_data = pivot_data
-    num_recommendations_input= input["num_recommendations"]
-
-
-    result=model.predict([[userid_input,pred_data,pivot_data,num_recommendations_input]])
+    user_ratings = predicted_ratings_svd[userid_input]
+    bakery_df['rating'] = user_ratings
+    bakery_df1 = bakery_df.sort_values(by=['rating'], ascending=False)
+    result=bakery_df1[['name', 'types_of_bread', 'rating']].head()
 
     return jsonify({ "result:" : result})
 

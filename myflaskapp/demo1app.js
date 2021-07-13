@@ -6,7 +6,7 @@ const demo1App = {
             inputBakeryType: "",
             inputBakeryObject:"",
             inputBakeryPrice:"",
-            cartList: [
+            productList: [
                 {
                     name: "BreadTalk",
                     type: "Muffins",
@@ -24,7 +24,7 @@ const demo1App = {
     }, 
     methods: {
         addNewItem: function() {
-            this.cartList.push({
+            this.productList.push({
                 name: this.inputBakeryName,
                 type: this.inputBakeryType,
                 object : this.inputBakeryObject,
@@ -36,7 +36,7 @@ const demo1App = {
             this.inputBakeryPrice = ""
         },
         deleteItem: function(index) {
-            this.cartList.splice(index, 1)
+            this.productList.splice(index, 1)
         }
     }
 }
