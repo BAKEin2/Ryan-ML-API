@@ -31,7 +31,7 @@ def recommend_places():
     bakery_df['rating'] = user_ratings
     bakery_df = bakery_df.sort_values(by=['rating'], ascending=False)
     bakery_df = pd.DataFrame(bakery_df[['name', 'types_of_bread', 'rating']].head())
-    result=bakery_df.to_json()
+    result=bakery_df.to_dict()
 
     return jsonify({
         "result":[

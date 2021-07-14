@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 #model = load("LoadedModels/rating_based_2.joblib")
 #predicted_ratings_svd = pickle.load(open("LoadedModels/predicted_ratings_svd.dat", "rb"))
-bakery_df = pd.read_csv('dataset/bakeries_location.csv').to_json()
+bakery_df = pd.read_csv('dataset/bakeries_location.csv')
 #pivot_data = pickle.load(open("pivot_data.dat", "rb"))
 
 def recommend_places(userID, pivot_data, pred_data, num_recommendations):
@@ -35,13 +35,13 @@ def recommend_places(userID, pivot_data, pred_data, num_recommendations):
     temp = temp.sort_values('user_predictions', ascending = False)
 
     print('\n Below are the recommended places for user(user_id = {}):\n'. format(userID))
-    print(temp.head(num_recommendations))
+    return temp.head(num_recommendations)
 
 @app.route("/recommendBakeries",methods=["POST"])
 #@cross_origin()
 def recommendBakeries():
     input=request.get_json()
-    rating_df = pd.read_csv('dataset/bakeries_location.csv')
+    rating_df = pd.read_csv('dataset/userprofile_ratings.csv')
     #target=["name","placeID","types_of_bread",'user_ratings']
 
     userid_input= input["userID"]
@@ -66,17 +66,10 @@ def recommendBakeries():
     pred_data = pd.DataFrame(all_user_predicted_ratings, columns = pivot_data.columns)
 
     userid_rating_input = input["userID_rating"]
-    result = recommend_places(userid_rating_input, pivot_data, pred_data, 5).toList()
+    result = recommend_places(userid_rating_input, pivot_data, pred_data, 5)
 
-    return jsonify({
-        "result":[
-            {"name" : result[0][0][1], "types_of_bread" : result[0][0][2],"rating": result[0][0][3]},
-            {"name" : result[0][1][1], "types_of_bread" : result[0][1][2],"rating": result[0][1][3]},
-            {"name" : result[0][2][1], "types_of_bread" : result[0][2][2],"rating": result[0][2][3]},
-            {"name" : result[0][3][1], "types_of_bread" : result[0][3][2],"rating": result[0][3][3]},
-            {"name" : result[0][4][1], "types_of_bread" : result[0][4][2],"rating": result[0][4][3]},
-        ]
-    })
+    result1 = result.to_dict('records')
+    return jsonify({ "result":result1})
 
 if __name__=="__main__":
     app.run(debug=True)

@@ -17,15 +17,18 @@ def recommend_restaurants(df, longitude, latitude):
     # Predict the cluster for longitude and latitude provided
     cluster = classifer.predict(np.array([longitude,latitude]).reshape(1,-1))[0]
     cluster1=int(cluster)
-      
+    print(cluster1)
+    df.head()
     # Get the best restaurant in this cluster
-    return df[df['cluster']==cluster1].iloc[0:5][['placeID','name','types_of_bread', 'latitude','longitude']]
+    filtered_df = df[df['cluster']==cluster1]
+    filtered_df.head()
+    return filtered_df.iloc[0:5][['placeID','name','types_of_bread', 'latitude','longitude']]
 
 @app.route("/recommendPopularBakeries",methods=["POST"])
 #@cross_origin()
 def recommendPopularBakeries():
     input=request.get_json()
-    pop_recommendations_df = pd.read_csv('dataset/pop_recommendations.csv').to_json()
+    pop_recommendations_df = pd.read_csv('dataset/pop_recommendations.csv')
     #target=["name","placeID","types_of_bread"]
     
     longitude_input = input["longitude"]
@@ -44,16 +47,8 @@ def recommendPopularBakeries():
     bakeries_extracted = pd.DataFrame(bakeries,columns=['placeID','name','bakery_longitude','bakery_latitude'])
     ''' 
     result=recommend_restaurants(pop_recommendations_df,longitude_input,latitude_input) 
-    result1 = result.tolist()
-    return jsonify({
-        "result":[
-            {"placeID" : result1[0][0][1], "name" : result1[0][0][2],"types_of_bread": result1[0][0][3],"latitude":result1[0][0][4],"longitude":result1[0][0][5]},
-            {"placeID" : result1[0][1][1], "name" : result1[0][1][2],"types_of_bread": result1[0][1][3],"latitude":result1[0][1][4],"longitude":result1[0][1][5]},
-            {"placeID" : result1[0][2][1], "name" : result1[0][2][2],"types_of_bread": result1[0][2][3],"latitude":result1[0][2][4],"longitude":result1[0][2][5]},
-            {"placeID" : result1[0][3][1], "name" : result1[0][3][2],"types_of_bread": result1[0][3][3],"latitude":result1[0][3][4],"longitude":result1[0][3][5]},
-            {"placeID" : result1[0][4][1], "name" : result1[0][4][2],"types_of_bread": result1[0][4][3],"latitude":result1[0][4][4],"longitude":result1[0][4][5]},
-        ]
-    })
+    result1 = result.to_dict('records')
+    return jsonify({ "result":result1})
         
 
 

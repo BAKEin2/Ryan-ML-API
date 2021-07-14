@@ -18,25 +18,27 @@ classifer=load("LoadedModels/interests_location_based_2.joblib")
 def recommend_restaurants(df, longitude, latitude):
     # Predict the cluster for longitude and latitude provided
     cluster = classifer.predict(np.array([longitude,latitude]).reshape(1,-1))[0]
-    print(cluster)
-      
+    cluster1=int(cluster)
+    print(cluster1)
+    df.head()
     # Get the best restaurant in this cluster
-    return df[df['cluster']==cluster].iloc[0:10][['placeID','name','types_of_bread', 'latitude','longitude'	]]
+    filtered_df = df[df['cluster']==cluster1]
+    filtered_df.head()
+    return filtered_df.iloc[0:5][['placeID','name','types_of_bread', 'latitude','longitude']]
 
 @app.route("/recommendInterestBakeries",methods=["POST"])
 #@cross_origin()
-
 def recommendInterestBakeries():
     input=request.get_json()
-    bakery_df = pd.read_csv('dataset/bakeries_location.csv')
+    bakery_df = pd.read_csv('dataset/bakery_df_extracted.csv')
     #target=["name","placeID","types_of_bread"]
 
     #userID= input["userID"]
     bread_interests=input["bread_interests"]
     longitude = input["longitude"]
     latitude = input["latitude"]
-    bakery_df_checkinput= pd.DataFrame([bakery_df['types_of_bread']==bread_interests])
-    bakery_df_selected_bread=pd.DataFrame([[bakery_df[bakery_df_checkinput]]]).to_json()
+    bakery_df_checkinput= bakery_df['types_of_bread']==bread_interests
+    bakery_df_selected_bread=bakery_df[bakery_df_checkinput]
     '''
     placeID = input["placeID"]
     name = input["name"]
@@ -48,16 +50,8 @@ def recommendInterestBakeries():
     bakeries_extracted = pd.DataFrame(bakeries,columns=['placeID','name','bakery_longitude','bakery_latitude'])
     '''
     result=recommend_restaurants(bakery_df_selected_bread,longitude,latitude) 
-    result1 = result.tolist()
-    return jsonify({
-        "result":[
-            {"placeID" : result1[0][0][1], "name" : result1[0][0][2],"types_of_bread": result1[0][0][3],"latitude":result1[0][0][4],"longitude":result1[0][0][5]},
-            {"placeID" : result1[0][1][1], "name" : result1[0][1][2],"types_of_bread": result1[0][1][3],"latitude":result1[0][1][4],"longitude":result1[0][1][5]},
-            {"placeID" : result1[0][2][1], "name" : result1[0][2][2],"types_of_bread": result1[0][2][3],"latitude":result1[0][2][4],"longitude":result1[0][2][5]},
-            {"placeID" : result1[0][3][1], "name" : result1[0][3][2],"types_of_bread": result1[0][3][3],"latitude":result1[0][3][4],"longitude":result1[0][3][5]},
-            {"placeID" : result1[0][4][1], "name" : result1[0][4][2],"types_of_bread": result1[0][4][3],"latitude":result1[0][4][4],"longitude":result1[0][4][5]},
-        ]
-    })
+    result1 = result.to_dict('records')
+    return jsonify({ "result":result1})
 
 if __name__=="__main__":
     app.run(debug=True)
