@@ -28,7 +28,7 @@ def recommend_restaurants(df, longitude, latitude):
 
 def recommendInterestBakeries():
     input=request.get_json()
-    bakery_df = pd.read_csv('dataset/bakeries_location.csv').to_json()
+    bakery_df = pd.read_csv('dataset/bakeries_location.csv')
     #target=["name","placeID","types_of_bread"]
 
     #userID= input["userID"]
@@ -36,7 +36,7 @@ def recommendInterestBakeries():
     longitude = input["longitude"]
     latitude = input["latitude"]
     bakery_df_checkinput= pd.DataFrame([bakery_df['types_of_bread']==bread_interests])
-    bakery_df_selected_bread=pd.DataFrame([bakery_df[bakery_df_checkinput]])
+    bakery_df_selected_bread=pd.DataFrame([[bakery_df[bakery_df_checkinput]]]).to_json()
     '''
     placeID = input["placeID"]
     name = input["name"]
@@ -48,7 +48,16 @@ def recommendInterestBakeries():
     bakeries_extracted = pd.DataFrame(bakeries,columns=['placeID','name','bakery_longitude','bakery_latitude'])
     '''
     result=recommend_restaurants(bakery_df_selected_bread,longitude,latitude) 
-    return jsonify({ "result:" : result })
+    result1 = result.tolist()
+    return jsonify({
+        "result":[
+            {"placeID" : result1[0][0][1], "name" : result1[0][0][2],"types_of_bread": result1[0][0][3],"latitude":result1[0][0][4],"longitude":result1[0][0][5]},
+            {"placeID" : result1[0][1][1], "name" : result1[0][1][2],"types_of_bread": result1[0][1][3],"latitude":result1[0][1][4],"longitude":result1[0][1][5]},
+            {"placeID" : result1[0][2][1], "name" : result1[0][2][2],"types_of_bread": result1[0][2][3],"latitude":result1[0][2][4],"longitude":result1[0][2][5]},
+            {"placeID" : result1[0][3][1], "name" : result1[0][3][2],"types_of_bread": result1[0][3][3],"latitude":result1[0][3][4],"longitude":result1[0][3][5]},
+            {"placeID" : result1[0][4][1], "name" : result1[0][4][2],"types_of_bread": result1[0][4][3],"latitude":result1[0][4][4],"longitude":result1[0][4][5]},
+        ]
+    })
 
 if __name__=="__main__":
     app.run(debug=True)

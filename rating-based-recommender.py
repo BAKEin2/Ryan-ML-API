@@ -29,10 +29,19 @@ def recommend_places():
     userid_input= input["userID"]
     user_ratings = predicted_ratings_svd[userid_input]
     bakery_df['rating'] = user_ratings
-    bakery_df1 = bakery_df.sort_values(by=['rating'], ascending=False)
-    result=bakery_df1[['name', 'types_of_bread', 'rating']].head()
+    bakery_df = bakery_df.sort_values(by=['rating'], ascending=False)
+    bakery_df = pd.DataFrame(bakery_df[['name', 'types_of_bread', 'rating']].head())
+    result=bakery_df.to_json()
 
-    return jsonify({ "result:" : result})
+    return jsonify({
+        "result":[
+            {"name" : result[0][0][1], "types_of_bread" : result[0][0][2],"rating": result[0][0][3]},
+            {"name" : result[0][1][1], "types_of_bread" : result[0][1][2],"rating": result[0][1][3]},
+            {"name" : result[0][2][1], "types_of_bread" : result[0][2][2],"rating": result[0][2][3]},
+            {"name" : result[0][3][1], "types_of_bread" : result[0][3][2],"rating": result[0][3][3]},
+            {"name" : result[0][4][1], "types_of_bread" : result[0][4][2],"rating": result[0][4][3]},
+        ]
+    })
 
 if __name__=="__main__":
     app.run(debug=True)
