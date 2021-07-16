@@ -7,10 +7,10 @@ from scipy.sparse.linalg import svds
 
 import pickle
 from joblib import dump,load
-#from flask_cors import CORS
+from flask_cors import CORS
 
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 
 interests_classifer=load("LoadedModels/interests_location_based_2.joblib")
 popularity_classifer=load("LoadedModels/popularity_location_based.joblib")
@@ -59,7 +59,6 @@ def recommend_rating_places(userID, pivot_data, pred_data, num_recommendations):
     return temp.head(num_recommendations)
 
 @app.route("/recommendInterestBakeries",methods=["POST"])
-#@cross_origin()
 def recommendInterestBakeries():
     input=request.get_json()
     bakery_df = pd.read_csv('dataset/bakery_df_extracted.csv')
@@ -75,7 +74,6 @@ def recommendInterestBakeries():
     return jsonify({ "result":result1})
 
 @app.route("/recommendPopularBakeries",methods=["POST"])
-#@cross_origin()
 def recommendPopularBakeries():
     input=request.get_json()
     pop_recommendations_df = pd.read_csv('dataset/pop_recommendations.csv')
@@ -88,7 +86,6 @@ def recommendPopularBakeries():
     return jsonify({ "result":result1})
 
 @app.route("/recommendRatedBakeries",methods=["POST"])
-#@cross_origin()
 def recommendRatedBakeries():
     input=request.get_json()
     rating_df = pd.read_csv('dataset/userprofile_ratings.csv')

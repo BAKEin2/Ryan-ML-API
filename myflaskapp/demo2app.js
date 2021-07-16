@@ -33,7 +33,7 @@ const demo2App = {
             })
             .then(response => response.json())
             .then(result => {
-                alert(result.result)
+                alert(JSON.stringify(result.result))
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -62,7 +62,7 @@ const demo2App = {
             })
             .then(response => response.json())
             .then(result => {
-                alert(result.result)
+                alert(JSON.stringify(result.result))
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -93,7 +93,7 @@ const demo2App = {
             })
             .then(response => response.json())
             .then(result => {
-                alert(result.result)
+                alert(JSON.stringify(result.result))
             })
             .catch(error => {
                 console.error('Error:', error);
