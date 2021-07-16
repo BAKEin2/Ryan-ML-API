@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class ="row">
-                    <a class="waves-effect waves-light btn" v-on:click="predictIrisSpecies">Predict</a>
+                    <a class="waves-effect waves-light btn" v-on:click="predictPopularBakeries">Predict</a>
                 </div>
             </div>
             <div class="card-panel">
@@ -40,22 +40,30 @@
                     </div>
                 </div>
                 <div class ="row">
-                    <a class="waves-effect waves-light btn" v-on:click="predictIrisSpecies">Predict</a>
+                    <a class="waves-effect waves-light btn" v-on:click="predictInterestBakeries">Predict</a>
                 </div>
             </div>
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col s3">
-                        <input placeholder="" id="sepalLength" type="text" class="validate" v-model="sepalLength">
-                        <label for="sepalLength">Sepal Length</label>
+                        <input placeholder="" id="userID" type="text" class="validate" v-model="userID">
+                        <label for="userID">Enter UserID</label>
                     </div>
                     <div class="input-field col s3">
-                        <input placeholder="" id="sepalWidth" type="text" class="validate" v-model="sepalWidth">
-                        <label for="sepalWidth">Sepal Width</label>
+                        <input placeholder="" id="rating" type="text" class="validate" v-model="rating">
+                        <label for="rating">Enter Rating</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input placeholder="" id="placeID" type="text" class="validate" v-model="placeID">
+                        <label for="placeID">Enter placeID</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input placeholder="" id="userID_rating" type="text" class="validate" v-model="userID_rating">
+                        <label for="userID_rating">Enter userID rating</label>
                     </div>
                 </div>
                 <div class ="row">
-                    <a class="waves-effect waves-light btn" v-on:click="predictIrisSpecies">Predict</a>
+                    <a class="waves-effect waves-light btn" v-on:click="predictRatedBakeries">Predict</a>
                 </div>
             </div>
         </div>
