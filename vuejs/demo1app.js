@@ -37,6 +37,18 @@ const demo1App = {
         },
         deleteItem: function(index) {
             this.productList.splice(index, 1)
+        },
+        editItem: function(index){
+            this.productList.push({
+                name: this.inputBakeryName,
+                type: this.inputBakeryType,
+                object : this.inputBakeryObject,
+                price : this.inputBakeryPrice
+            })
+            this.inputBakeryName = ""
+            this.inputBakeryType = ""
+            this.inputBakeryObject = ""
+            this.inputBakeryPrice = ""
         }
     }
 }

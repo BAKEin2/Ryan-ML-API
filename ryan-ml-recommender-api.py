@@ -16,6 +16,7 @@ interests_classifer=load("LoadedModels/interests_location_based_2.joblib")
 popularity_classifer=load("LoadedModels/popularity_location_based.joblib")
 bakery_df = pd.read_csv('dataset/bakeries_location.csv')
 
+
 def recommend_interests_restaurants(df, longitude, latitude):
     # Predict the cluster for longitude and latitude provided
     cluster = interests_classifer.predict(np.array([longitude,latitude]).reshape(1,-1))[0]
@@ -77,7 +78,7 @@ def recommendInterestBakeries():
 def recommendPopularBakeries():
     input=request.get_json()
     pop_recommendations_df = pd.read_csv('dataset/pop_recommendations.csv')
-    
+
     longitude_input = input["longitude"]
     latitude_input = input["latitude"]
 
