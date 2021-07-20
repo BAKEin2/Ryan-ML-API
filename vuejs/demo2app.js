@@ -19,7 +19,7 @@ const demo2App = {
                     latitude: this.latitude,
                 }
             ))
-            fetch('http://127.0.0.1:5000/recommendPopularBakeries', {
+            fetch('http://127.0.0.1:8000/recommendPopularBakeries', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ const demo2App = {
                     bread_interests : this.bread_interests
                 }
             ))
-            fetch('http://127.0.0.1:5000/recommendInterestBakeries', {
+            fetch('http://127.0.0.1:8000/recommendInterestBakeries', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const demo2App = {
                     userID_rating: this.userID_rating,
                 }
             ))
-            fetch('http://127.0.0.1:5000/recommendRatedBakeries', {
+            fetch('http://127.0.0.1:8000/recommendRatedBakeries', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
